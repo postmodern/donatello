@@ -97,7 +97,7 @@ Donatello.BarGraph = function(data,options) {
     {
       if (!(this.bar_width))
       {
-        this.bar_padding = (this.width / (data.length + 1));
+        this.bar_padding = ((this.width / (data.length + 1)) / 2);
         this.bar_width = this.bar_padding;
       }
       else
@@ -197,17 +197,17 @@ Donatello.BarGraph.prototype = {
 
     if (this.type == 'vertical')
     {
-      x = padding + (this.bar_width * i);
-      y = this.bar_padding;
       w = this.bar_width;
       h = this.bar_min + ((this.height - (this.bar_padding * 2)) * ratio);
+      x = padding + (this.bar_width * i);
+      y = this.height - this.bar_padding - h;
     }
     else if (this.type == 'horizontal')
     {
-      x = this.bar_padding;
-      y = padding + (i * this.bar_height);
       w = this.bar_min + ((this.width - (this.bar_padding * 2)) * ratio);
       h = this.bar_height;
+      x = this.bar_padding;
+      y = padding + (i * this.bar_height);
     }
 
     var c;
