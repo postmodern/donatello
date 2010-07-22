@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <script type="text/javascript" src="../vendor/jquery.min.js"></script>
+    <script type="text/javascript" src="../vendor/raphael.js"></script>
+    <script type="text/javascript" src="../donatello.js"></script>
+    <script type="text/javascript">
+      var bar_graph;
+
+      $(document).ready(function() {
+        bar_graph = new Donatello.BarGraph([10,20,30,40,50], {
+          container: "#graph",
+          type: 'horizontal',
+          height: 100,
+          width: 300,
+          gradient: ['yellow', 'red'],
+          hover: [
+            function(bar) { alert("hover in"); },
+            function(bar) { alert("hover out"); }
+          ],
+          click: function(bar) {
+            alert("you clicked bar #" + (bar.index + 1));
+          }
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="graph">
+    </div>
+  </body>
+</html>
