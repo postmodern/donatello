@@ -81,10 +81,26 @@ Donatello.Element.prototype = {
   },
 
   highlight: function(ratio,ms) {
-    this.node.scale(ratio || 1.5);
+    if (ms != null && ms > 0)
+    {
+      this.node.animate({scale: ratio}, ms);
+    }
+    else
+    {
+      this.node.scale(ratio);
+    }
   },
 
-  unhighlight: function() { this.node.scale(1.0); },
+  unhighlight: function(ms) {
+    if (ms != null && ms > 0)
+    {
+      this.node.animate({scale: 1.0}, ms);
+    }
+    else
+    {
+      this.node.scale(1.0);
+    }
+  },
 
   click: function(callback) {
     var element = this;
