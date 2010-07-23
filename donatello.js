@@ -81,7 +81,7 @@ Donatello.Element.prototype = {
   },
 
   highlight: function(color,stroke_width) {
-    this.node.attr(stroke, color);
+    this.node.attr('stroke', color);
 
     if (stroke_width)
     {
