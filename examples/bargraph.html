@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <script type="text/javascript" src="../vendor/jquery.min.js"></script>
+    <script type="text/javascript" src="../vendor/raphael.js"></script>
+    <script type="text/javascript" src="../donatello.js"></script>
+    <script type="text/javascript">
+      var bargraph;
+
+      $(document).ready(function() {
+        bargraph = new Donatello.BarGraph([10,20,30,40,50], {
+          container: "#bargraph",
+          type: 'vertical',
+          height: 600,
+          width: 800,
+          background: 'black',
+          bar: {gradient: ['yellow', 'red']}
+        });
+
+        bargraph.click(function(bar) {
+          alert("you clicked bar #" + (bar.index + 1));
+        });
+
+        bargraph.hover(
+          function(bar) { bar.highlight('gray', 10); },
+          function(bar) { bar.unhighlight(); }
+        );
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="bargraph"></div>
+  </body>
+</html>

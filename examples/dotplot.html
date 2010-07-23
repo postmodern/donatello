@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <script type="text/javascript" src="../vendor/jquery.min.js"></script>
+    <script type="text/javascript" src="../vendor/raphael.js"></script>
+    <script type="text/javascript" src="../donatello.js"></script>
+    <script type="text/javascript">
+      var dotplot;
+
+      $(document).ready(function() {
+        dotplot = new Donatello.DotPlot(
+          [
+            [4,5], [10,53], [22,23], [5,91], [44,18], [11,34],
+            [0,10], [42,22], [43,10], [10,20], [12,43], [54,82],
+            [70,23], [43,21], [50,10], [30,33], [17, 78], [34, 67],
+            [59,12], [55, 80], [80, 90], [12,12], [19, 41], [31, 0]
+          ],
+
+          {
+            container: "#dotplot",
+            height: 400,
+            width: 400,
+            dot: {radius: 10, color: 'blue', opacity: 0.7}
+          }
+        );
+
+        dotplot.click(function(dot) {
+          alert("You clicked dot [" + dot.value[0] + ", " + dot.value[1] + "]");
+        });
+
+        dotplot.hover(
+          function(dot) { dot.raise(1.5, 200); },
+          function(dot) { dot.lower(200); }
+        );
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="dotplot"></div>
+  </body>
+</html>
