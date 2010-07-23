@@ -20,6 +20,11 @@
           alert("you clicked bar #" + (bar.index + 1));
         });
 
+        bar_graph.hover(
+          function(bar) { bar.highlight('gray', 10); },
+          function(bar) { bar.unhighlight(); }
+        );
+
         dot_plot = new Donatello.DotPlot(
           [
             [4,5], [10,53], [22,23], [5,91], [44,18], [11,34],
@@ -43,11 +48,11 @@
 
         dot_plot.hover(
           function(dot) {
-            dot.highlight();
+            dot.raise(1.5, 200);
           },
 
           function(dot) {
-            dot.unhighlight();
+            dot.lower(200);
           }
         );
       });

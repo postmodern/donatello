@@ -76,6 +76,25 @@ Donatello.Element.prototype = {
     this.node.attr({opacity: opacity, 'fill-opacity': opacity, 'stroke-opacity': opacity});
   },
 
+  highlight: function(color,width) {
+    options = {'stroke-opacity': 1.0, stroke: color};
+
+    if (width != null)
+    {
+      options['stroke-width'] = width;
+    }
+
+    this.node.attr(options);
+  },
+
+  unhighlight: function() {
+    this.node.attr({
+      'stroke': this.node.attr('fill'),
+      'stroke-width': 1,
+      'stroke-opacity': this.node.attr('fill-opacity')
+    });
+  },
+
   scale: function(ratio) {
     this.node.scale(ratio);
   },
