@@ -166,10 +166,12 @@ Donatello.BarGraph = function(data,options) {
   this.width = options['width'];
   this.height = options['height'];
 
-  this.bar_min = (options['bar_min'] || 0);
-  this.bar_width = options['bar_width'];
-  this.bar_height = options['bar_height'];
-  this.bar_padding = options['bar_padding'];
+  this.bar = (options['bar'] || {});
+
+  if (this.bar.min == null)
+  {
+    this.bar.min = 0;
+  }
 
   if (this.type == null)
   {
@@ -184,23 +186,23 @@ Donatello.BarGraph = function(data,options) {
 
     if (!(this.width))
     {
-      if (!(this.bar_padding) && !(this.bar_width))
+      if (!(this.bar.padding) && !(this.bar.width))
       {
-        throw "Must specify the 'bar_padding' and 'bar_width' options when the 'width' option is not given";
+        throw "Must specify the bar 'padding' and bar 'width' options when the 'width' option is not given";
       }
 
-      this.width = ((this.bar_padding * (data.length + 1)) + (this.bar_width * data.length));
+      this.width = ((this.bar.padding * (data.length + 1)) + (this.bar.width * data.length));
     }
-    else if (!(this.bar_padding))
+    else if (!(this.bar.padding))
     {
-      if (!(this.bar_width))
+      if (!(this.bar.width))
       {
-        this.bar_padding = ((this.width / (data.length + 1)) / 2);
-        this.bar_width = this.bar_padding;
+        this.bar.padding = ((this.width / (data.length + 1)) / 2);
+        this.bar.width = this.bar.padding;
       }
       else
       {
-        this.bar_padding = ((this.width - (data.length * this.bar_width)) / (data.length + 1));
+        this.bar.padding = ((this.width - (data.length * this.bar.width)) / (data.length + 1));
       }
     }
   }
@@ -213,23 +215,23 @@ Donatello.BarGraph = function(data,options) {
 
     if (!(this.height))
     {
-      if (!(this.bar_padding) && !(this.bar_height))
+      if (!(this.bar.padding) && !(this.bar.height))
       {
-        throw "Must specify the 'bar_padding' and 'bar_height' options when the 'height' option is not given";
+        throw "Must specify the bar 'padding' and bar 'height' options when the 'height' option is not given";
       }
 
-      this.height = ((this.bar_padding * (data.length + 1)) + (this.bar_height * data.length));
+      this.height = ((this.bar.padding * (data.length + 1)) + (this.bar.height * data.length));
     }
-    else if (!(this.bar_padding))
+    else if (!(this.bar.padding))
     {
-      if (!(this.bar_height))
+      if (!(this.bar.height))
       {
-        this.bar_padding = ((this.height / (data.length + 1)) / 2);
-        this.bar_height = this.bar_padding;
+        this.bar.padding = ((this.height / (data.length + 1)) / 2);
+        this.bar.height = this.bar.padding;
       }
       else
       {
-        this.bar_padding = ((this.height - (data.length * this.bar_height)) / (data.length + 1));
+        this.bar.padding = ((this.height - (data.length * this.bar.height)) / (data.length + 1));
       }
     }
   }
@@ -290,23 +292,23 @@ Donatello.BarGraph.prototype = new Donatello.Graph();
 Donatello.BarGraph.constructor = Donatello.BarGraph;
 
 Donatello.BarGraph.prototype.addBar = function(i,value,options) {
-  var padding = ((i + 1) * this.bar_padding);
+  var padding = ((i + 1) * this.bar.padding);
   var ratio = (value / this.max);
   var x,y,h,w;
 
   if (this.type == 'vertical')
   {
-    w = this.bar_width;
-    h = this.bar_min + ((this.height - (this.bar_padding * 2)) * ratio);
-    x = padding + (this.bar_width * i);
-    y = this.height - this.bar_padding - h;
+    w = this.bar.width;
+    h = this.bar.min + ((this.height - (this.bar.padding * 2)) * ratio);
+    x = padding + (this.bar.width * i);
+    y = this.height - this.bar.padding - h;
   }
   else if (this.type == 'horizontal')
   {
-    w = this.bar_min + ((this.width - (this.bar_padding * 2)) * ratio);
-    h = this.bar_height;
-    x = this.bar_padding;
-    y = padding + (i * this.bar_height);
+    w = this.bar.min + ((this.width - (this.bar.padding * 2)) * ratio);
+    h = this.bar.height;
+    x = this.bar.padding;
+    y = padding + (i * this.bar.height);
   }
 
   var c;
@@ -320,10 +322,10 @@ Donatello.BarGraph.prototype.addBar = function(i,value,options) {
     c = this.color;
   }
 
-  var bar = new Donatello.BarGraph.Bar(i,value,this.paper,x,y,w,h,c.hex());
+  var new_bar = new Donatello.BarGraph.Bar(i,value,this.paper,x,y,w,h,c.hex());
 
-  this.elements.push(bar);
-  return bar;
+  this.elements.push(new_bar);
+  return new_bar;
 };
 
 Donatello.BarGraph.Bar = function(index,value,paper,x,y,width,height,color) {
