@@ -262,3 +262,103 @@ Donatello.BarGraph.Bar.prototype = {
     this.box.attr({stroke: color, fill: color});
   }
 };
+
+Donatello.DotPlot = function(data,options) {
+  this.width = options['width'];
+  this.height = options['height'];
+
+  if (!(this.width))
+  {
+    throw "Must specify the 'width' option when creating a DotPlot";
+  }
+
+  if (!(this.height))
+  {
+    throw "Must specify the 'height' option when creating a DotPlot";
+  }
+
+  this.dot_radius = options['radius'];
+
+  if (!(this.dot_radius))
+  {
+    throw "Must specify the 'radius' option when creating a DotPlot";
+  }
+
+  this.dot_color = Raphael.getRGB(options['color'] || 'blue');
+  this.dot_opacity = options['opacity'];
+
+  this.min = [0, 0];
+  this.max = [0, 0];
+
+  for (var i=0; i<data.length; i++)
+  {
+    if (data[i][0] < this.min[0])
+    {
+      this.min[0] = data[i][0];
+    }
+
+    if (data[i][1] < this.min[1])
+    {
+      this.min[1] = data[i][1];
+    }
+
+    if (data[i][0] > this.max[0])
+    {
+      this.max[0] = data[i][0];
+    }
+
+    if (data[i][1] > this.max[1])
+    {
+      this.max[1] = data[i][1];
+    }
+  }
+
+  this.paper = Raphael(jQuery(options['container'])[0], this.width, this.height);
+  this.dots = [];
+
+  for (var i=0; i<data.length; i++)
+  {
+    this.dots.push(this.newDot(data[i],options));
+  }
+};
+
+Donatello.DotPlot.prototype = {
+  newDot: function(value,options)
+  {
+    var x = (((value[0] / this.max[0]) * (this.width - this.dot_radius)) + (this.dot_radius / 2));
+    var y = (((value[1] / this.max[1]) * (this.height - this.dot_radius)) + (this.dot_radius / 2));
+
+    var dot = new Donatello.DotPlot.Dot(value,this.paper,x,y,this.dot_radius,this.dot_color,this.dot_opacity);
+    var dom_node = dot.node();
+
+    if (options['click'])
+    {
+      jQuery(dom_node).click(function() { options['click'](dot); });
+    }
+
+    if (options['hover'])
+    {
+      jQuery(dom_node).click(
+        function() { options['hover'][0](dot); },
+        function() { options['hover'][1](dot); }
+      );
+    }
+
+    return dot;
+  }
+};
+
+Donatello.DotPlot.Dot = function(value,paper,x,y,radius,color,opacity) {
+  this.value = value;
+
+  this.x = x;
+  this.y = y;
+  this.radius = radius;
+
+  this.circle = paper.circle(this.x, this.y, this.radius);
+  this.circle.attr({fill: color, stroke: color, opacity: opacity, 'fill-opacity': opacity});
+};
+
+Donatello.DotPlot.Dot.prototype = {
+  node: function() { return this.circle.node; }
+};
