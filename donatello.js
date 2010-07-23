@@ -81,7 +81,7 @@ Donatello.Element.prototype = {
   },
 
   highlight: function(ratio,ms) {
-    this.node.animate({scale: (ratio || 1.5)}, (ms || 100));
+    this.node.scale(ratio || 1.5);
   },
 
   unhighlight: function() { this.node.scale(1.0); },
