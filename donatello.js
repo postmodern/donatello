@@ -350,8 +350,8 @@ Donatello.DotPlot.prototype = new Donatello.Graph();
 Donatello.DotPlot.constructor = Donatello.DotPlot;
 
 Donatello.DotPlot.prototype.addDot = function(value,options) {
-  var x = (((value[0] / this.max[0]) * (this.width - this.dot_radius)) + (this.dot_radius / 2));
-  var y = (((value[1] / this.max[1]) * (this.height - this.dot_radius)) + (this.dot_radius / 2));
+  var x = (((value[0] / this.max[0]) * (this.width - (this.dot_radius * 2))) + this.dot_radius);
+  var y = (((value[1] / this.max[1]) * (this.height - (this.dot_radius * 2))) + this.dot_radius);
 
   var dot = new Donatello.DotPlot.Dot(value,this.paper,x,y,this.dot_radius,this.dot_color,this.dot_opacity);
   var dom_node = dot.node();
