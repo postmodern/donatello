@@ -60,6 +60,24 @@ Donatello.Gradient.prototype = {
   }
 };
 
+Donatello.Graph = function() {
+  this.elements = [];
+};
+
+Donatello.Graph.prototype.click = function(callback) {
+  for (var i=0; i<this.elements.length; i++)
+  {
+    this.elements[i].click(callback);
+  }
+};
+
+Donatello.Graph.prototype.hover = function(in_callback,out_callback) {
+  for (var i=0; i<this.elements.length; i++)
+  {
+    this.elements[i].hover(in_callback,out_callback);
+  }
+};
+
 Donatello.BarGraph = function(data,options) {
   if (options == null)
   {
@@ -183,68 +201,56 @@ Donatello.BarGraph = function(data,options) {
   }
 
   this.paper = Raphael(jQuery(options['container'])[0], this.width, this.height);
-  this.bars = [];
 
   for (var i=0; i<data.length; i++)
   {
-    this.bars.push(this.newBar(i,data[i],options));
+    this.elements.push(this.newBar(i,data[i],options));
   }
 };
 
-Donatello.BarGraph.prototype = {
-  newBar: function(i,value,options) {
-    var padding = ((i + 1) * this.bar_padding);
-    var ratio = (value / this.max);
-    var x,y,h,w;
+Donatello.BarGraph.prototype = new Donatello.Graph();
+Donatello.BarGraph.constructor = Donatello.BarGraph;
 
-    if (this.type == 'vertical')
-    {
-      w = this.bar_width;
-      h = this.bar_min + ((this.height - (this.bar_padding * 2)) * ratio);
-      x = padding + (this.bar_width * i);
-      y = this.height - this.bar_padding - h;
-    }
-    else if (this.type == 'horizontal')
-    {
-      w = this.bar_min + ((this.width - (this.bar_padding * 2)) * ratio);
-      h = this.bar_height;
-      x = this.bar_padding;
-      y = padding + (i * this.bar_height);
-    }
+Donatello.BarGraph.prototype.newBar = function(i,value,options) {
+  var padding = ((i + 1) * this.bar_padding);
+  var ratio = (value / this.max);
+  var x,y,h,w;
 
-    var c;
-
-    if (this.gradient)
-    {
-      c = this.gradient.scale(ratio);
-    }
-    else
-    {
-      c = this.color;
-    }
-
-    var bar = new Donatello.BarGraph.Bar(i,value,this.paper,x,y,w,h,c.hex());
-    var dom_node = bar.node();
-
-    return bar;
-  },
-
-  click: function(callback) {
-    for (var i=0; i<this.bars.length; i++)
-    {
-      this.bars[i].click(callback);
-    }
-  },
-
-  hover: function(in_callback,out_callback) {
-    for (var i=0; i<this.bars.length; i++)
-    {
-      this.bars[i].hover(in_callback,out_callback);
-    }
+  if (this.type == 'vertical')
+  {
+    w = this.bar_width;
+    h = this.bar_min + ((this.height - (this.bar_padding * 2)) * ratio);
+    x = padding + (this.bar_width * i);
+    y = this.height - this.bar_padding - h;
   }
+  else if (this.type == 'horizontal')
+  {
+    w = this.bar_min + ((this.width - (this.bar_padding * 2)) * ratio);
+    h = this.bar_height;
+    x = this.bar_padding;
+    y = padding + (i * this.bar_height);
+  }
+
+  var c;
+
+  if (this.gradient)
+  {
+    c = this.gradient.scale(ratio);
+  }
+  else
+  {
+    c = this.color;
+  }
+
+  var bar = new Donatello.BarGraph.Bar(i,value,this.paper,x,y,w,h,c.hex());
+  var dom_node = bar.node();
+
+  return bar;
 };
 
 Donatello.BarGraph.Bar = function(index,value,paper,x,y,width,height,color) {
+  Donatello.Graph.call(this);
+
   this.index = index;
   this.value = value;
 
@@ -280,6 +286,8 @@ Donatello.BarGraph.Bar.prototype = {
 };
 
 Donatello.DotPlot = function(data,options) {
+  Donatello.Graph.call(this);
+
   this.width = options['width'];
   this.height = options['height'];
 
@@ -330,39 +338,24 @@ Donatello.DotPlot = function(data,options) {
   }
 
   this.paper = Raphael(jQuery(options['container'])[0], this.width, this.height);
-  this.dots = [];
 
   for (var i=0; i<data.length; i++)
   {
-    this.dots.push(this.newDot(data[i],options));
+    this.elements.push(this.newDot(data[i],options));
   }
 };
 
-Donatello.DotPlot.prototype = {
-  newDot: function(value,options)
-  {
-    var x = (((value[0] / this.max[0]) * (this.width - this.dot_radius)) + (this.dot_radius / 2));
-    var y = (((value[1] / this.max[1]) * (this.height - this.dot_radius)) + (this.dot_radius / 2));
+Donatello.DotPlot.prototype = new Donatello.Graph();
+Donatello.DotPlot.constructor = Donatello.DotPlot;
 
-    var dot = new Donatello.DotPlot.Dot(value,this.paper,x,y,this.dot_radius,this.dot_color,this.dot_opacity);
-    var dom_node = dot.node();
+Donatello.DotPlot.prototype.newDot = function(value,options) {
+  var x = (((value[0] / this.max[0]) * (this.width - this.dot_radius)) + (this.dot_radius / 2));
+  var y = (((value[1] / this.max[1]) * (this.height - this.dot_radius)) + (this.dot_radius / 2));
 
-    return dot;
-  },
+  var dot = new Donatello.DotPlot.Dot(value,this.paper,x,y,this.dot_radius,this.dot_color,this.dot_opacity);
+  var dom_node = dot.node();
 
-  click: function(callback) {
-    for (var i=0; i<this.dots.length; i++)
-    {
-      this.dots[i].click(callback);
-    }
-  },
-
-  hover: function(in_callback,out_callback) {
-    for (var i=0; i<this.dots.length; i++)
-    {
-      this.dots[i].hover(in_callback,out_callback);
-    }
-  }
+  return dot;
 };
 
 Donatello.DotPlot.Dot = function(value,paper,x,y,radius,color,opacity) {
