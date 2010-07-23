@@ -1,4 +1,6 @@
-var Donatello = {};
+var Donatello = {
+  defaultColor: 'blue'
+};
 
 Donatello.Color = function(r,g,b) {
   this.r = r;
@@ -161,7 +163,7 @@ Donatello.BarGraph = function(data,options) {
   }
   else
   {
-    this.color = Raphael.getRGB(options['color'] || 'blue');
+    this.color = Raphael.getRGB(options['color'] || Donatello.defaultColor);
   }
 
   this.min = 0;
@@ -284,7 +286,7 @@ Donatello.DotPlot = function(data,options) {
     throw "Must specify the 'radius' option when creating a DotPlot";
   }
 
-  this.dot_color = Raphael.getRGB(options['color'] || 'blue');
+  this.dot_color = Raphael.getRGB(options['color'] || Donatello.defaultColor);
   this.dot_opacity = options['opacity'];
 
   this.min = [0, 0];
