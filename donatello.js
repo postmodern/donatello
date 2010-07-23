@@ -80,7 +80,7 @@ Donatello.Element.prototype = {
     this.node.scale(ratio);
   },
 
-  highlight: function(ratio,ms) {
+  raise: function(ratio,ms) {
     if (ms != null && ms > 0)
     {
       this.node.animate({scale: ratio}, ms);
@@ -91,7 +91,7 @@ Donatello.Element.prototype = {
     }
   },
 
-  unhighlight: function(ms) {
+  lower: function(ms) {
     if (ms != null && ms > 0)
     {
       this.node.animate({scale: 1.0}, ms);
