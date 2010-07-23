@@ -213,10 +213,10 @@ Donatello.BarGraph = function(data,options) {
   }
 
   this.type = options['type'];
-  this.width = options['width'];
-  this.height = options['height'];
+  this.width = options.width;
+  this.height = options.height;
 
-  this.bar = (options['bar'] || {});
+  this.bar = (options.bar || {});
 
   if (this.bar.min == null)
   {
@@ -403,8 +403,8 @@ Donatello.LineGraph = function(data,options) {
     options = {};
   }
 
-  this.width = options['width'];
-  this.height = options['height'];
+  this.width = options.width;
+  this.height = options.height;
 
   if (!(this.width))
   {
@@ -416,9 +416,9 @@ Donatello.LineGraph = function(data,options) {
     throw "Must specify the 'height' option when creating a LineGraph";
   }
 
-  this.point = (options['point'] || {});
-  this.slice = (options['slice'] || {});
-  this.edge = (options['edge'] || {});
+  this.point = (options.point || {});
+  this.slice = (options.slice || {});
+  this.edge = (options.edge || {});
 
   var sorted_data = data.sort(function(value1,value2) {
     return value1[0] - value2[0];
@@ -621,16 +621,16 @@ Donatello.DotPlot = function(data,options) {
     throw "Must specify the 'height' option when creating a DotPlot";
   }
 
-  this.dot = (options['dot'] || {});
+  this.dot = (options.dot || {});
 
-  if (!(this.dot['radius']))
+  if (!(this.dot.radius))
   {
     throw "Must specify the dot 'radius' option when creating a DotPlot";
   }
 
-  if (!(this.dot['color']))
+  if (!(this.dot.color))
   {
-    this.dot['color'] = Donatello.defaultColor;
+    this.dot.color = Donatello.defaultColor;
   }
 
   this.min = [0, 0];
