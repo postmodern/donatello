@@ -463,7 +463,6 @@ Donatello.LineGraph = function(data,options) {
     ];
 
     this.addSlice(start,stop,point1,point2);
-    this.addEdge(start,stop,point1,point2);
 
     last_point = sorted_data[i];
   }
@@ -498,6 +497,8 @@ Donatello.LineGraph.prototype.addSlice = function(start,stop,point1,point2,optio
   }
 
   var new_slice = new Donatello.LineGraph.Slice(start, stop, this.paper, point1, point2, this.height, jQuery.extend(this.slice,options));
+
+  new_slice.edge = this.addEdge(start,stop,point1,point2);
 
   this.slices.push(new_slice);
   return new_slice;
