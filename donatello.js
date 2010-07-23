@@ -204,14 +204,14 @@ Donatello.BarGraph = function(data,options) {
 
   for (var i=0; i<data.length; i++)
   {
-    this.elements.push(this.newBar(i,data[i],options));
+    this.addBar(i,data[i],options);
   }
 };
 
 Donatello.BarGraph.prototype = new Donatello.Graph();
 Donatello.BarGraph.constructor = Donatello.BarGraph;
 
-Donatello.BarGraph.prototype.newBar = function(i,value,options) {
+Donatello.BarGraph.prototype.addBar = function(i,value,options) {
   var padding = ((i + 1) * this.bar_padding);
   var ratio = (value / this.max);
   var x,y,h,w;
@@ -245,6 +245,7 @@ Donatello.BarGraph.prototype.newBar = function(i,value,options) {
   var bar = new Donatello.BarGraph.Bar(i,value,this.paper,x,y,w,h,c.hex());
   var dom_node = bar.node();
 
+  this.elements.push(bar);
   return bar;
 };
 
@@ -341,20 +342,21 @@ Donatello.DotPlot = function(data,options) {
 
   for (var i=0; i<data.length; i++)
   {
-    this.elements.push(this.newDot(data[i],options));
+    this.addDot(data[i],options);
   }
 };
 
 Donatello.DotPlot.prototype = new Donatello.Graph();
 Donatello.DotPlot.constructor = Donatello.DotPlot;
 
-Donatello.DotPlot.prototype.newDot = function(value,options) {
+Donatello.DotPlot.prototype.addDot = function(value,options) {
   var x = (((value[0] / this.max[0]) * (this.width - this.dot_radius)) + (this.dot_radius / 2));
   var y = (((value[1] / this.max[1]) * (this.height - this.dot_radius)) + (this.dot_radius / 2));
 
   var dot = new Donatello.DotPlot.Dot(value,this.paper,x,y,this.dot_radius,this.dot_color,this.dot_opacity);
   var dom_node = dot.node();
 
+  this.elements.push(dot);
   return dot;
 };
 
