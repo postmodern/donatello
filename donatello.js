@@ -60,6 +60,52 @@ Donatello.Gradient.prototype = {
   }
 };
 
+Donatello.Element = function(value) {
+  this.value = value;
+  this.node = null;
+};
+
+Donatello.Element.prototype = {
+  node: function() { return this.node; },
+
+  color: function(color) {
+    this.node.attr({fill: color, stroke: color});
+  },
+
+  opacity: function(opacity) {
+    this.node.attr({opacity: opacity, 'fill-opacity': opacity, 'stroke-opacity': opacity});
+  },
+
+  scale: function(ratio) {
+    this.node.scale(ratio);
+  },
+
+  highlight: function(color,stroke_width) {
+    this.node.attr(stroke, color);
+
+    if (stroke_width)
+    {
+      this.node.attr('stroke-width', stroke_width);
+    }
+  },
+
+  unhighlight: function() { this.node.attr('stroke', this.node.attr('fill')); },
+
+  click: function(callback) {
+    var element = this;
+    jQuery(this.node.node).click(function() { callback(element); });
+    return this;
+  },
+
+  hover: function(in_callback,out_callback) {
+    var element = this;
+    jQuery(this.node.node).hover(
+      function() { in_callback(element); },
+      function() { out_callback(element); }
+    );
+  }
+};
+
 Donatello.Graph = function() {
   this.elements = [];
 };
@@ -79,6 +125,8 @@ Donatello.Graph.prototype.hover = function(in_callback,out_callback) {
 };
 
 Donatello.BarGraph = function(data,options) {
+  Donatello.Graph.call(this);
+
   if (options == null)
   {
     options = {};
@@ -243,48 +291,27 @@ Donatello.BarGraph.prototype.addBar = function(i,value,options) {
   }
 
   var bar = new Donatello.BarGraph.Bar(i,value,this.paper,x,y,w,h,c.hex());
-  var dom_node = bar.node();
 
   this.elements.push(bar);
   return bar;
 };
 
 Donatello.BarGraph.Bar = function(index,value,paper,x,y,width,height,color) {
-  Donatello.Graph.call(this);
+  Donatello.Element.call(this, value);
 
   this.index = index;
-  this.value = value;
 
   this.x = x;
   this.y = y;
   this.width = width;
   this.height = height;
 
-  this.box = paper.rect(this.x, this.y, this.width, this.height);
-  this.setColor(color);
+  this.node = paper.rect(this.x, this.y, this.width, this.height);
+  this.color(color);
 };
 
-Donatello.BarGraph.Bar.prototype = {
-  node: function() { return this.box.node; },
-
-  setColor: function(color)
-  {
-    this.box.attr({stroke: color, fill: color});
-  },
-
-  click: function(callback) {
-    var bar = this;
-    jQuery(this.node()).click(function() { callback(bar); });
-  },
-
-  hover: function(in_callback,out_callback) {
-    var dot = this;
-    jQuery(this.node()).hover(
-      function() { in_callback(dot); },
-      function() { out_callback(dot); }
-    );
-  }
-};
+Donatello.BarGraph.Bar.prototype = new Donatello.Element();
+Donatello.BarGraph.Bar.constructor = Donatello.BarGraph.Bar;
 
 Donatello.DotPlot = function(data,options) {
   Donatello.Graph.call(this);
@@ -354,36 +381,22 @@ Donatello.DotPlot.prototype.addDot = function(value,options) {
   var y = (this.height - (((value[1] / this.max[1]) * (this.height - (this.dot_radius * 2))) + this.dot_radius));
 
   var dot = new Donatello.DotPlot.Dot(value,this.paper,x,y,this.dot_radius,this.dot_color,this.dot_opacity);
-  var dom_node = dot.node();
 
   this.elements.push(dot);
   return dot;
 };
 
 Donatello.DotPlot.Dot = function(value,paper,x,y,radius,color,opacity) {
-  this.value = value;
+  Donatello.Element.call(this, value);
 
   this.x = x;
   this.y = y;
   this.radius = radius;
 
-  this.circle = paper.circle(this.x, this.y, this.radius);
-  this.circle.attr({fill: color, stroke: color, opacity: opacity, 'fill-opacity': opacity});
+  this.node = paper.circle(this.x, this.y, this.radius);
+  this.color(color);
+  this.opacity(opacity);
 };
 
-Donatello.DotPlot.Dot.prototype = {
-  node: function() { return this.circle.node; },
-
-  click: function(callback) {
-    var dot = this;
-    jQuery(this.node()).click(function() { callback(dot); });
-  },
-
-  hover: function(in_callback,out_callback) {
-    var dot = this;
-    jQuery(this.node()).hover(
-      function() { in_callback(dot); },
-      function() { out_callback(dot); }
-    );
-  }
-};
+Donatello.DotPlot.Dot.prototype = new Donatello.Element();
+Donatello.DotPlot.Dot.constructor = Donatello.DotPlot.Dot;
