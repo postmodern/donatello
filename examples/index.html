@@ -40,6 +40,16 @@
         dot_plot.click(function(dot) {
           alert("You clicked dot [" + dot.value[0] + ", " + dot.value[1] + "]");
         });
+
+        dot_plot.hover(
+          function(dot) {
+            dot.highlight('blue',4);
+          },
+
+          function(dot) {
+            dot.unhightlight();
+          }
+        );
       });
     </script>
   </head>
