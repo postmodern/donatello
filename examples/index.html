@@ -13,14 +13,11 @@
           type: 'vertical',
           height: 600,
           width: 800,
-          gradient: ['yellow', 'red'],
-          hover: [
-            function(bar) { alert("hover in"); },
-            function(bar) { alert("hover out"); }
-          ],
-          click: function(bar) {
-            alert("you clicked bar #" + (bar.index + 1));
-          }
+          gradient: ['yellow', 'red']
+        });
+
+        bar_graph.click(function(bar) {
+          alert("you clicked bar #" + (bar.index + 1));
         });
 
         dot_plot = new Donatello.DotPlot([[4,5], [10,53], [22, 23], [5,91], [44,18], [11,34]], {
@@ -30,6 +27,10 @@
           radius: 10,
           color: 'blue',
           opacity: 0.7
+        });
+
+        dot_plot.click(function(dot) {
+          alert("You clicked dot [" + dot.value[0] + ", " + dot.value[1] + "]");
         });
       });
     </script>

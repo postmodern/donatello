@@ -226,20 +226,21 @@ Donatello.BarGraph.prototype = {
     var bar = new Donatello.BarGraph.Bar(i,value,this.paper,x,y,w,h,c.hex());
     var dom_node = bar.node();
 
-    if (options['click'])
-    {
-      jQuery(dom_node).click(function() { options['click'](bar); });
-    }
-
-    if (options['hover'])
-    {
-      jQuery(dom_node).hover(
-        function() { options['hover'][0](bar); },
-        function() { options['hover'][1](bar); }
-      );
-    }
-
     return bar;
+  },
+
+  click: function(callback) {
+    for (var i=0; i<this.bars.length; i++)
+    {
+      this.bars[i].click(callback);
+    }
+  },
+
+  hover: function(in_callback,out_callback) {
+    for (var i=0; i<this.bars.length; i++)
+    {
+      this.bars[i].hover(in_callback,out_callback);
+    }
   }
 };
 
@@ -262,6 +263,19 @@ Donatello.BarGraph.Bar.prototype = {
   setColor: function(color)
   {
     this.box.attr({stroke: color, fill: color});
+  },
+
+  click: function(callback) {
+    var bar = this;
+    jQuery(this.node()).click(function() { callback(bar); });
+  },
+
+  hover: function(in_callback,out_callback) {
+    var dot = this;
+    jQuery(this.node()).hover(
+      function() { in_callback(dot); },
+      function() { out_callback(dot); }
+    );
   }
 };
 
@@ -333,20 +347,21 @@ Donatello.DotPlot.prototype = {
     var dot = new Donatello.DotPlot.Dot(value,this.paper,x,y,this.dot_radius,this.dot_color,this.dot_opacity);
     var dom_node = dot.node();
 
-    if (options['click'])
-    {
-      jQuery(dom_node).click(function() { options['click'](dot); });
-    }
-
-    if (options['hover'])
-    {
-      jQuery(dom_node).click(
-        function() { options['hover'][0](dot); },
-        function() { options['hover'][1](dot); }
-      );
-    }
-
     return dot;
+  },
+
+  click: function(callback) {
+    for (var i=0; i<this.dots.length; i++)
+    {
+      this.dots[i].click(callback);
+    }
+  },
+
+  hover: function(in_callback,out_callback) {
+    for (var i=0; i<this.dots.length; i++)
+    {
+      this.dots[i].hover(in_callback,out_callback);
+    }
   }
 };
 
@@ -362,5 +377,18 @@ Donatello.DotPlot.Dot = function(value,paper,x,y,radius,color,opacity) {
 };
 
 Donatello.DotPlot.Dot.prototype = {
-  node: function() { return this.circle.node; }
+  node: function() { return this.circle.node; },
+
+  click: function(callback) {
+    var dot = this;
+    jQuery(this.node()).click(function() { callback(dot); });
+  },
+
+  hover: function(in_callback,out_callback) {
+    var dot = this;
+    jQuery(this.node()).hover(
+      function() { in_callback(dot); },
+      function() { out_callback(dot); }
+    );
+  }
 };
