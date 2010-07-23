@@ -80,16 +80,11 @@ Donatello.Element.prototype = {
     this.node.scale(ratio);
   },
 
-  highlight: function(color,stroke_width) {
-    this.node.attr('stroke', color);
-
-    if (stroke_width)
-    {
-      this.node.attr('stroke-width', stroke_width);
-    }
+  highlight: function(ratio,ms) {
+    this.node.animate({scale: (ratio || 1.5)}, (ms || 100));
   },
 
-  unhighlight: function() { this.node.attr('stroke', this.node.attr('fill')); },
+  unhighlight: function() { this.node.scale(1.0); },
 
   click: function(callback) {
     var element = this;
