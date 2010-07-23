@@ -1,21 +1,3 @@
-Raphael.fn.polygon = function (params, points) {
-    var el = document.createElementNS(this.svgns, "polygon");
-    el.setAttribute("points", points);
-    if (this.canvas) {
-        this.canvas.appendChild(el);
-    }                    
-    var p = new this.raphael.Element(el, this);
-    p.type = "polygon";
-    if (params) {
-        !params.gradient && (params.fill = params.fill || "none");
-        params.stroke = params.stroke || "#000";
-    } else {
-        params = {fill: "none", stroke: "#000"};
-    }
-    this.raphael.setFillAndStroke(p, params);
-    return p;
-};
-
 var Donatello = {
   defaultColor: 'blue'
 };
