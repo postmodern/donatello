@@ -113,6 +113,8 @@ Donatello.Element.prototype.scale = function(ratio) {
 };
 
 Donatello.Element.prototype.raise = function(ratio,ms) {
+  this.node.stop();
+
   if (ms != null && ms > 0)
   {
     this.node.animate({scale: ratio}, ms);
@@ -124,6 +126,8 @@ Donatello.Element.prototype.raise = function(ratio,ms) {
 };
 
 Donatello.Element.prototype.lower = function(ms) {
+  this.node.stop();
+
   if (ms != null && ms > 0)
   {
     this.node.animate({scale: 1.0}, ms);
@@ -836,6 +840,7 @@ Donatello.PieChart.Slice.constructor = Donatello.PieChart.Slice;
 Donatello.PieChart.Slice.prototype.raise = function(ratio,ms) {
   var attr = {scale: ([ratio, ratio, this.center[0], this.center[1]]).join(',')};
 
+  this.node.stop();
   this.node.toFront();
 
   if (ms != null && ms > 0)
@@ -850,6 +855,8 @@ Donatello.PieChart.Slice.prototype.raise = function(ratio,ms) {
 
 Donatello.Element.prototype.lower = function(ms) {
   var attr = {scale: ([1.0, 1.0, this.center[0], this.center[1]]).join(',')};
+
+  this.node.stop();
 
   if (ms != null && ms > 0)
   {
