@@ -750,8 +750,8 @@ Donatello.PieChart = function(data,options) {
   else
   {
     this.piechart.colors = new Donatello.ColorRange(
-      Raphael.getRGB('blue'),
-      Raphael.getRGB('#aaa')
+      Raphael.getRGB('#f00000'),
+      Raphael.getRGB('#050000')
     );
   }
 
@@ -782,8 +782,9 @@ Donatello.PieChart = function(data,options) {
   for (var i=0; i<sorted_data.length; i++)
   {
     var stop_angle = (start_angle + ((sorted_data[i] / this.sum) * 360));
+    var color = this.piechart.colors.pick((i+1) / sorted_data.length).hex();
 
-    this.addSlice(sorted_data[i], start_angle, stop_angle);
+    this.addSlice(sorted_data[i], start_angle, stop_angle, color);
     start_angle = stop_angle;
   }
 };
@@ -791,8 +792,7 @@ Donatello.PieChart = function(data,options) {
 Donatello.PieChart.prototype = new Donatello.Graph();
 Donatello.PieChart.constructor = Donatello.PieChart;
 
-Donatello.PieChart.prototype.addSlice = function(value,start_angle,stop_angle,options) {
-  var color = this.piechart.colors.pick(start_angle / 360).hex();
+Donatello.PieChart.prototype.addSlice = function(value,start_angle,stop_angle,color) {
   var new_slice = new Donatello.PieChart.Slice(value,this.paper,[this.piechart.x, this.piechart.y],this.piechart.radius,start_angle,stop_angle,color);
 
   this.elements.push(new_slice);
