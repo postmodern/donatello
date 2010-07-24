@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <script type="text/javascript" src="../vendor/jquery.min.js"></script>
+    <script type="text/javascript" src="../vendor/raphael.js"></script>
+    <script type="text/javascript" src="../donatello.js"></script>
+    <script type="text/javascript">
+      var piechart;
+
+      $(document).ready(function() {
+        piechart = new Donatello.PieChart(
+          [10, 2, 5, 8, 21, 55, 80],
+
+          {
+            width: 400,
+            height: 400,
+            container: "#piechart",
+            piechart: {radius: 120, colors: ['yellow', 'green']},
+            edge: {color: 'blue', opacity: 0.5}
+          }
+        );
+
+        piechart.hover(
+          function(slice) { slice.raise(1.5, 200); },
+          function(slice) { slice.lower(); }
+        );
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="piechart"></div>
+  </body>
+</html>

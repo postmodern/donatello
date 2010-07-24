@@ -30,34 +30,40 @@ Donatello.Color.prototype = {
   }
 };
 
-Donatello.Gradient = function(angle,start,stop) {
-  this.angle = angle;
+Donatello.ColorRange = function(start,stop) {
   this.start = start;
   this.stop = stop;
 };
 
-Donatello.Gradient.prototype = {
-  color: function(ratio) {
-    var r = Math.floor(this.start.r + ((this.stop.r - this.start.r) * ratio));
-    var g = Math.floor(this.start.g + ((this.stop.g - this.start.g) * ratio));
-    var b = Math.floor(this.start.b + ((this.stop.b - this.start.b) * ratio));
+Donatello.ColorRange.prototype.pick = function(ratio) {
+  var r = Math.floor(this.start.r + ((this.stop.r - this.start.r) * ratio));
+  var g = Math.floor(this.start.g + ((this.stop.g - this.start.g) * ratio));
+  var b = Math.floor(this.start.b + ((this.stop.b - this.start.b) * ratio));
 
-    return new Donatello.Color(r,g,b);
-  },
+  return new Donatello.Color(r,g,b);
+};
 
-  scale: function(ratio) {
-    var r = Math.floor(this.start.r + ((this.stop.r - this.start.r) * ratio));
-    var g = Math.floor(this.start.g + ((this.stop.g - this.start.g) * ratio));
-    var b = Math.floor(this.start.b + ((this.stop.b - this.start.b) * ratio));
+Donatello.Gradient = function(angle,start,stop) {
+  Donatello.ColorRange.call(start,stop);
 
-    return new Donatello.Gradient(this.angle,this.start,new Donatello.Color(r,g,b));
-  },
+  this.angle = angle;
+};
 
-  hex: function() {
-    return this.angle.toString() + '-' +
-           Donatello.Color.hex(this.start.r, this.start.g, this.start.b) + '-' + 
-           Donatello.Color.hex(this.stop.r, this.stop.g, this.stop.b);
-  }
+Donatello.Gradient.prototype = new Donatello.ColorRange();
+Donatello.Gradient.constructor = Donatello.Gradient;
+
+Donatello.Gradient.prototype.scale = function(ratio) {
+  var r = Math.floor(this.start.r + ((this.stop.r - this.start.r) * ratio));
+  var g = Math.floor(this.start.g + ((this.stop.g - this.start.g) * ratio));
+  var b = Math.floor(this.start.b + ((this.stop.b - this.start.b) * ratio));
+
+  return new Donatello.Gradient(this.angle,this.start,new Donatello.Color(r,g,b));
+};
+
+Donatello.Gradient.prototype.hex = function() {
+  return this.angle.toString() + '-' +
+         Donatello.Color.hex(this.start.r, this.start.g, this.start.b) + '-' + 
+         Donatello.Color.hex(this.stop.r, this.stop.g, this.stop.b);
 };
 
 Donatello.Element = function(value) {
@@ -73,11 +79,11 @@ Donatello.Element.node_attr = function(name) {
 
 Donatello.Element.prototype.node = function() { return this.node; };
 
-Donatello.Element.prototype.color = function(color) {
+Donatello.Element.prototype.setColor = function(color) {
   this.node.attr({fill: color, stroke: color});
 };
 
-Donatello.Element.prototype.opacity = function(opacity) {
+Donatello.Element.prototype.setOpacity = function(opacity) {
   this.node.attr({opacity: opacity, 'fill-opacity': opacity, 'stroke-opacity': opacity});
 };
 
@@ -167,11 +173,11 @@ Donatello.Point = function(value,paper,x,y,options) {
   Donatello.Element.call(this, value);
 
   this.node = paper.circle(x,y,options.radius);
-  this.color(options.color);
+  this.setColor(options.color);
 
   if (options.opacity)
   {
-    this.opacity(options.opacity);
+    this.setOpacity(options.opacity);
   }
 };
 
@@ -384,7 +390,7 @@ Donatello.BarGraph.Bar = function(index,value,paper,x,y,width,height,color) {
   this.index = index;
 
   this.node = paper.rect(x, y, width, height);
-  this.color(color);
+  this.setColor(color);
 };
 
 Donatello.BarGraph.Bar.prototype = new Donatello.Element();
@@ -549,7 +555,7 @@ Donatello.LineGraph.Slice = function(value1,value2,paper,start,stop,height,optio
 
   if (options.opacity)
   {
-    this.opacity(options.opacity);
+    this.setOpacity(options.opacity);
   }
 };
 
@@ -563,7 +569,7 @@ Donatello.LineGraph.Edge = function(value1,value2,paper,start,stop,options) {
   this.stop = stop;
 
   this.node = paper.path('M' + start[0] + ',' + start[1] + 'L' + stop[0] + ',' + stop[1]);
-  this.color(options.color);
+  this.setColor(options.color);
 
   if (options.width != null)
   {
@@ -590,11 +596,11 @@ Donatello.LineGraph.BaseLine = function(value,paper,y,length,options) {
     this.node.attr('stroke-width', options.width);
   }
 
-  this.color(options.color || Donatello.defaultColor);
+  this.setColor(options.color || Donatello.defaultColor);
 
   if (options.opacity != null)
   {
-    this.opacity(options.opacity);
+    this.setOpacity(options.opacity);
   }
 };
 
@@ -683,4 +689,174 @@ Donatello.DotPlot.prototype.addDot = function(value,options) {
 
   this.elements.push(new_dot);
   return new_dot;
+};
+
+Donatello.PieChart = function(data,options) {
+  Donatello.Graph.call(this);
+
+  if (options == null)
+  {
+    options = {};
+  }
+
+  this.width = options.width;
+  this.height = options.height;
+
+  if (!(this.width))
+  {
+    throw "Must specify the 'width' option when creating a PieChart";
+  }
+
+  if (!(this.height))
+  {
+    throw "Must specify the 'height' option when creating a PieChart";
+  }
+
+  this.piechart = (options.piechart || {});
+  this.edge = (options.edge || {});
+
+  if (this.edge.width == null)
+  {
+    this.edge.width = 0;
+  }
+
+  if (this.edge.color == null)
+  {
+    this.edge.color = Donatello.defaultColor;
+  }
+
+  if (this.piechart.x == null)
+  {
+    this.piechart.x = (this.width / 2);
+  }
+
+  if (this.piechart.y == null)
+  {
+    this.piechart.y = (this.height / 2);
+  }
+
+  if (this.piechart.radius == null)
+  {
+    this.piechart.radius = ((this.width - this.piechart.x) / 2);
+  }
+
+  if (this.piechart.colors)
+  {
+    this.piechart.colors = new Donatello.ColorRange(
+      Raphael.getRGB(this.piechart.colors[0]),
+      Raphael.getRGB(this.piechart.colors[1])
+    );
+  }
+  else
+  {
+    this.piechart.colors = new Donatello.ColorRange(
+      Raphael.getRGB('blue'),
+      Raphael.getRGB('#aaa')
+    );
+  }
+
+  var sorted_data = data.sort(function(value1,value2) {
+    return value1 - value2;
+  });
+
+  this.min = sorted_data[0];
+  this.max = sorted_data[sorted_data.length - 1];
+  this.sum = 0;
+
+  for (var i=0; i<sorted_data.length; i++)
+  {
+    this.sum += sorted_data[i];
+  }
+
+  this.init(options);
+
+  this.node = this.paper.circle(this.piechart.x, this.piechart.y, this.piechart.radius);
+
+  if (this.piechart.color != null)
+  {
+    this.node.attr('stroke', this.piechart.color);
+  }
+
+  var start_angle = 0;
+
+  for (var i=0; i<sorted_data.length; i++)
+  {
+    var stop_angle = (start_angle + ((sorted_data[i] / this.sum) * 360));
+
+    this.addSlice(sorted_data[i], start_angle, stop_angle);
+    start_angle = stop_angle;
+  }
+};
+
+Donatello.PieChart.prototype = new Donatello.Graph();
+Donatello.PieChart.constructor = Donatello.PieChart;
+
+Donatello.PieChart.prototype.addSlice = function(value,start_angle,stop_angle,options) {
+  var color = this.piechart.colors.pick(start_angle / 360).hex();
+  var new_slice = new Donatello.PieChart.Slice(value,this.paper,[this.piechart.x, this.piechart.y],this.piechart.radius,start_angle,stop_angle,color);
+
+  this.elements.push(new_slice);
+  return new_slice;
+};
+
+Donatello.PieChart.Slice = function(value,paper,center,radius,start_angle,stop_angle,color) {
+  Donatello.Element.call(this,value);
+
+  this.center = center;
+  this.radius = radius;
+  this.start_angle = start_angle;
+  this.stop_angle = stop_angle;
+
+  var radian = (Math.PI / 180);
+
+  var point1 = [
+    (this.center[0] + (this.radius * Math.cos(this.start_angle * radian))),
+    (this.center[1] + (this.radius * Math.sin(this.start_angle * radian)))
+  ];
+
+  var point2 = [
+    (this.center[0] + (this.radius * Math.cos(this.stop_angle * radian))),
+    (this.center[1] + (this.radius * Math.sin(this.stop_angle * radian)))
+  ];
+
+  var over_half = (Math.abs(this.stop_angle - this.start_angle) > 180);
+
+  this.node = paper.path(
+    'M' + this.center[0] + ',' + this.center[1] + 'L' + point1[0] + ',' + point1[1] + 
+    'A' + this.radius + ',' + this.radius + ' 0 ' + (+over_half) + ',1 ' + point2[0] + ',' + point2[1] +
+    'z'
+  );
+
+  this.setColor(color);
+};
+
+Donatello.PieChart.Slice.prototype = new Donatello.Element();
+Donatello.PieChart.Slice.constructor = Donatello.PieChart.Slice;
+
+Donatello.PieChart.Slice.prototype.raise = function(ratio,ms) {
+  var attr = {scale: ([ratio, ratio, this.center[0], this.center[1]]).join(',')};
+
+  this.node.toFront();
+
+  if (ms != null && ms > 0)
+  {
+    this.node.animate(attr, ms);
+  }
+  else
+  {
+    this.node.attr(attr);
+  }
+};
+
+Donatello.Element.prototype.lower = function(ms) {
+  var attr = {scale: ([1.0, 1.0, this.center[0], this.center[1]]).join(',')};
+
+  if (ms != null && ms > 0)
+  {
+    this.node.animate(attr, ms);
+  }
+  else
+  {
+    this.node.attr(attr);
+  }
 };
