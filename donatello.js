@@ -721,7 +721,7 @@ Donatello.PieChart = function(data,options) {
   }
 
   this.piechart = (options.piechart || {});
-  this.edge = (options.edge || {});
+  this.border = (options.border || {});
 
   if (this.edge.width == null)
   {
