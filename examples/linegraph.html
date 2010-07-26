@@ -30,13 +30,13 @@
         );
 
         linegraph.edges.hover(
-          function(edge) { edge.color('green'); },
-          function(edge) { edge.color('red'); }
+          function(edge) { edge.setColor('green'); },
+          function(edge) { edge.setColor('red'); }
         );
 
         linegraph.baseline.hover(
-          function(baseline) { baseline.color('black'); },
-          function(baseline) { baseline.color('gray'); }
+          function(baseline) { baseline.setColor('black'); },
+          function(baseline) { baseline.setColor('gray'); }
         );
       });
     </script>
