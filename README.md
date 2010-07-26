@@ -17,6 +17,17 @@ Donatello is a highly configurable JavaScript Graphing library built ontop of
 * [raphael.js](http://raphaeljs.com/)
 * [jquery.js](http://jquery.com/)
 
+## Examples
+
+* See the `examples/` directory.
+
+## Installation
+
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/raphael.min.js"></script>
+    ...
+    <script type="text/javascript" src="js/donatello.min.js"></script>
+
 ## License
 
 Copyright (c) 2010 Hal Brodigan
