@@ -723,16 +723,6 @@ Donatello.PieChart = function(data,options) {
   this.piechart = (options.piechart || {});
   this.border = (options.border || {});
 
-  if (this.edge.width == null)
-  {
-    this.edge.width = 0;
-  }
-
-  if (this.edge.color == null)
-  {
-    this.edge.color = Donatello.defaultColor;
-  }
-
   if (this.piechart.x == null)
   {
     this.piechart.x = (this.width / 2);
@@ -780,11 +770,6 @@ Donatello.PieChart = function(data,options) {
 
   this.node = this.paper.circle(this.piechart.x, this.piechart.y, this.piechart.radius);
 
-  if (this.piechart.color != null)
-  {
-    this.node.attr('stroke', this.piechart.color);
-  }
-
   var start_angle = 0;
 
   for (var i=0; i<sorted_data.length; i++)
@@ -792,7 +777,7 @@ Donatello.PieChart = function(data,options) {
     var stop_angle = (start_angle + ((sorted_data[i] / this.sum) * 360));
     var color = this.piechart.colors.pick((i+1) / sorted_data.length).hex();
 
-    this.addSlice(sorted_data[i], start_angle, stop_angle, color);
+    this.addSlice(sorted_data[i],start_angle,stop_angle,color);
     start_angle = stop_angle;
   }
 };
@@ -800,14 +785,20 @@ Donatello.PieChart = function(data,options) {
 Donatello.PieChart.prototype = new Donatello.Graph();
 Donatello.PieChart.constructor = Donatello.PieChart;
 
-Donatello.PieChart.prototype.addSlice = function(value,start_angle,stop_angle,color) {
-  var new_slice = new Donatello.PieChart.Slice(value,this.paper,[this.piechart.x, this.piechart.y],this.piechart.radius,start_angle,stop_angle,color);
+Donatello.PieChart.prototype.addSlice = function(value,start_angle,stop_angle,color,border) {
+  if (border == null)
+  {
+    border = {};
+  }
+
+  var center = [this.piechart.x, this.piechart.y];
+  var new_slice = new Donatello.PieChart.Slice(value,this.paper,center,this.piechart.radius,start_angle,stop_angle,color,jQuery.extend(this.border,border));
 
   this.elements.push(new_slice);
   return new_slice;
 };
 
-Donatello.PieChart.Slice = function(value,paper,center,radius,start_angle,stop_angle,color) {
+Donatello.PieChart.Slice = function(value,paper,center,radius,start_angle,stop_angle,color,border) {
   Donatello.Element.call(this,value);
 
   this.center = center;
@@ -836,6 +827,19 @@ Donatello.PieChart.Slice = function(value,paper,center,radius,start_angle,stop_a
   );
 
   this.setColor(color);
+
+  if (border)
+  {
+    if (border.color)
+    {
+      this.node.attr('stroke', border.color);
+    }
+
+    if (border.width)
+    {
+      this.node.attr('stroke-width', border.width);
+    }
+  }
 };
 
 Donatello.PieChart.Slice.prototype = new Donatello.Element();
