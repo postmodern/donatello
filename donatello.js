@@ -559,7 +559,12 @@ Donatello.LineGraph.Slice = function(value1,value2,paper,start,stop,height,optio
     ('M' + this.start[0] + ',' + this.height + 'V' + this.start[1]) + 'Z'
   );
 
-  this.node = paper.path(full_path).attr({stroke: options.color, fill: options.color});
+  this.node = paper.path(full_path);
+
+  if (options.color)
+  {
+    this.setColor(options.color);
+  }
 
   if (options.opacity)
   {
