@@ -866,7 +866,7 @@ Donatello.PieChart.Slice.prototype.raise = function(ratio,ms) {
   }
 };
 
-Donatello.Element.prototype.lower = function(ms) {
+Donatello.PieChart.Slice.prototype.lower = function(ms) {
   var attr = {scale: ([1.0, 1.0, this.center[0], this.center[1]]).join(',')};
 
   this.node.stop();
