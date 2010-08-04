@@ -553,7 +553,8 @@ Donatello.LineGraph.Slice = function(value1,value2,paper,start,stop,height,optio
   this.height = height;
 
   var edge_path = ('M' + this.start[0] + ',' + this.start[1] + 'L' + this.stop[0] + ',' + this.stop[1]);
-  var full_path = (edge_path + 
+  var full_path = (
+    edge_path + 
     ('M' + this.stop[0] + ',' + this.stop[1] + 'V' + this.height) + 
     ('M' + this.stop[0] + ',' + this.height + 'H' + this.start[0]) +
     ('M' + this.start[0] + ',' + this.height + 'V' + this.start[1]) + 'Z'
@@ -574,6 +575,9 @@ Donatello.LineGraph.Slice = function(value1,value2,paper,start,stop,height,optio
 
 Donatello.LineGraph.Slice.prototype = new Donatello.Element();
 Donatello.LineGraph.Slice.constructor = Donatello.LineGraph.Slice;
+
+Donatello.LineGraph.Slice.prototype.color = Donatello.Element.node_attr('fill');
+Donatello.LineGraph.Slice.prototype.opacity = Donatello.Element.node_attr('fill-opacity');
 
 Donatello.LineGraph.Edge = function(value1,value2,paper,start,stop,options) {
   Donatello.Element.call(this, [value1, value2]);
