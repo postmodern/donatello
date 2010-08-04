@@ -201,6 +201,11 @@ Donatello.Graph = function() {
 };
 
 Donatello.Graph.prototype.init = function(options) {
+  if (options['options'] == null)
+  {
+    throw "Must specify the 'container' option when creating a Graph";
+  }
+
   this.paper = Raphael(jQuery(options['container'])[0], this.width, this.height);
 
   if (options['background'])
