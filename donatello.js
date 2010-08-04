@@ -44,7 +44,7 @@ Donatello.ColorRange.prototype.pick = function(ratio) {
 };
 
 Donatello.Gradient = function(angle,start,stop) {
-  Donatello.ColorRange.call(start,stop);
+  Donatello.ColorRange.call(this,start,stop);
 
   this.angle = angle;
 };
