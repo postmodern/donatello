@@ -7,3 +7,5 @@ task :minify => 'donatello.js' do
     file.write(JSMin.minify(File.read('donatello.js')))
   end
 end
+
+task :default => :minify
