@@ -40,11 +40,11 @@ Donatello.ColorRange.prototype.pick = function(ratio) {
   var g = Math.floor(this.start.g + ((this.stop.g - this.start.g) * ratio));
   var b = Math.floor(this.start.b + ((this.stop.b - this.start.b) * ratio));
 
-  return new Donatello.Color(r,g,b);
+  return new Donatello.Color(r, g, b);
 };
 
 Donatello.Gradient = function(angle,start,stop) {
-  Donatello.ColorRange.call(this,start,stop);
+  Donatello.ColorRange.call(this, start, stop);
 
   this.angle = angle;
 };
@@ -57,7 +57,7 @@ Donatello.Gradient.prototype.scale = function(ratio) {
   var g = Math.floor(this.start.g + ((this.stop.g - this.start.g) * ratio));
   var b = Math.floor(this.start.b + ((this.stop.b - this.start.b) * ratio));
 
-  return new Donatello.Gradient(this.angle,this.start,new Donatello.Color(r,g,b));
+  return new Donatello.Gradient(this.angle, this.start, new Donatello.Color(r,g,b));
 };
 
 Donatello.Gradient.prototype.hex = function() {
@@ -173,14 +173,14 @@ Donatello.Collection.prototype.click = function(callback) {
 Donatello.Collection.prototype.hover = function(in_callback,out_callback) {
   for (var i=0; i<this.length; i++)
   {
-    this[i].hover(in_callback,out_callback);
+    this[i].hover(in_callback, out_callback);
   }
 };
 
 Donatello.Point = function(value,paper,x,y,options) {
   Donatello.Element.call(this, value);
 
-  this.node = paper.circle(x,y,options.radius);
+  this.node = paper.circle(x, y, options.radius);
   this.setColor(options.color);
 
   if (options.opacity)
@@ -348,7 +348,7 @@ Donatello.BarGraph = function(data,options) {
 
   for (var i=0; i<data.length; i++)
   {
-    this.addBar(i,data[i],options);
+    this.addBar(i, data[i], options);
   }
 };
 
@@ -386,7 +386,7 @@ Donatello.BarGraph.prototype.addBar = function(i,value,options) {
     c = this.bar.color;
   }
 
-  var new_bar = new Donatello.BarGraph.Bar(i,value,this.paper,x,y,w,h,c.hex());
+  var new_bar = new Donatello.BarGraph.Bar(i, value, this.paper, x, y, w, h, c.hex());
 
   this.elements.push(new_bar);
   return new_bar;
@@ -476,7 +476,7 @@ Donatello.LineGraph = function(data,options) {
       (((stop[1] - this.min[1]) / this.max[1]) * this.height)
     ];
 
-    this.addSlice(start,stop,point1,point2);
+    this.addSlice(start, stop, point1, point2);
 
     last_point = sorted_data[i];
   }
@@ -497,7 +497,7 @@ Donatello.LineGraph = function(data,options) {
 
     var y = (((this.max[1] - baseline_value) / this.max[1]) * this.height);
 
-    this.baseline = new Donatello.LineGraph.BaseLine(baseline_value,this.paper,y,this.width,options.baseline);
+    this.baseline = new Donatello.LineGraph.BaseLine(baseline_value, this.paper, y, this.width, options.baseline);
   }
 };
 
@@ -512,7 +512,7 @@ Donatello.LineGraph.prototype.addSlice = function(start,stop,point1,point2,optio
 
   var new_slice = new Donatello.LineGraph.Slice(start, stop, this.paper, point1, point2, this.height, jQuery.extend(this.slice,options));
 
-  new_slice.edge = this.addEdge(start,stop,point1,point2);
+  new_slice.edge = this.addEdge(start, stop, point1, point2);
 
   this.slices.push(new_slice);
   return new_slice;
@@ -524,7 +524,7 @@ Donatello.LineGraph.prototype.addEdge = function(start,stop,point1,point2,option
     options = {};
   }
 
-  var new_edge = new Donatello.LineGraph.Edge(start,stop,this.paper,point1,point2,jQuery.extend(this.edge,options));
+  var new_edge = new Donatello.LineGraph.Edge(start, stop, this.paper, point1, point2, jQuery.extend(this.edge,options));
 
   this.edges.push(new_edge);
   return new_edge;
@@ -539,7 +539,7 @@ Donatello.LineGraph.prototype.addPoint = function(value,options) {
   var x = (((value[0] - this.min[0]) / this.max[0]) * this.width);
   var y = (((value[1] - this.min[1]) / this.max[1]) * this.height);
 
-  var new_point = new Donatello.Point(value,this.paper,x,y,jQuery.extend(this.point,options));
+  var new_point = new Donatello.Point(value, this.paper, x, y, jQuery.extend(this.point,options));
 
   this.elements.push(new_point);
   return new_point;
@@ -786,7 +786,7 @@ Donatello.PieChart = function(data,options) {
     var stop_angle = (start_angle + ((sorted_data[i] / this.sum) * 360));
     var color = this.piechart.colors.pick((i+1) / sorted_data.length).hex();
 
-    this.addSlice(sorted_data[i],start_angle,stop_angle,color);
+    this.addSlice(sorted_data[i], start_angle, stop_angle,color);
     start_angle = stop_angle;
   }
 };
@@ -801,14 +801,14 @@ Donatello.PieChart.prototype.addSlice = function(value,start_angle,stop_angle,co
   }
 
   var center = [this.piechart.x, this.piechart.y];
-  var new_slice = new Donatello.PieChart.Slice(value,this.paper,center,this.piechart.radius,start_angle,stop_angle,color,jQuery.extend(this.border,border));
+  var new_slice = new Donatello.PieChart.Slice(value, this.paper, center, this.piechart.radius, start_angle, stop_angle, color, jQuery.extend(this.border,border));
 
   this.elements.push(new_slice);
   return new_slice;
 };
 
 Donatello.PieChart.Slice = function(value,paper,center,radius,start_angle,stop_angle,color,border) {
-  Donatello.Element.call(this,value);
+  Donatello.Element.call(this, value);
 
   this.center = center;
   this.radius = radius;
