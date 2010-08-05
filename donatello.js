@@ -24,10 +24,8 @@ Donatello.Color.hex = function(r,g,b) {
   return '#' + toHex(r) + toHex(g) + toHex(b);
 };
 
-Donatello.Color.prototype = {
-  hex: function() {
-    return Donatello.Color.hex(this.r, this.g, this.b);
-  }
+Donatello.Color.prototype.hex = function() {
+  return Donatello.Color.hex(this.r, this.g, this.b);
 };
 
 Donatello.ColorRange = function(start,stop) {
