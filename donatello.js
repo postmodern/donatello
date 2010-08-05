@@ -206,7 +206,7 @@ Donatello.Graph = function() {
 };
 
 Donatello.Graph.prototype.init = function(options) {
-  if (options['options'] == null)
+  if (options['container'] == null)
   {
     throw "Must specify the 'container' option when creating a Graph";
   }
