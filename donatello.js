@@ -391,7 +391,7 @@ Donatello.BarGraph.prototype.addBar = function(i,value,options) {
   }
   else
   {
-    c = this.bar.color;
+    c = Raphael.getRGB(this.bar.color);
   }
 
   var new_bar = new Donatello.BarGraph.Bar(this, i, value, this.paper, x, y, w, h, c.hex());
