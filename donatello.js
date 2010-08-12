@@ -8,6 +8,12 @@ Donatello.Color = function(r,g,b) {
   this.b = b;
 };
 
+Donatello.Color.parse = function(color) {
+  var raphael_color = Raphael.getRGB(color);
+
+  return new Donatello.Color(raphael_color.r,raphael_color.g,raphael_color.b);
+};
+
 Donatello.Color.hex = function(r,g,b) {
   function toHex(i)
   {
