@@ -266,13 +266,13 @@ Donatello.BarGraph = function(data,options) {
 
     this.bar.gradient = new Donatello.Gradient(
       angle,
-      Raphael.getRGB(this.bar.gradient[0]),
-      Raphael.getRGB(this.bar.gradient[1])
+      Donatello.Color.parse(this.bar.gradient[0]),
+      Donatello.Color.parse(this.bar.gradient[1])
     );
   }
   else
   {
-    this.bar.color = Raphael.getRGB(this.bar.color || Donatello.defaultColor);
+    this.bar.color = Donatello.Color.parse(this.bar.color || Donatello.defaultColor);
   }
 
   if (this.type == null)
@@ -397,7 +397,7 @@ Donatello.BarGraph.prototype.addBar = function(i,value,options) {
   }
   else
   {
-    c = Raphael.getRGB(this.bar.color);
+    c = this.bar.color;
   }
 
   var new_bar = new Donatello.BarGraph.Bar(this, i, value, this.paper, x, y, w, h, c.hex());
@@ -764,15 +764,15 @@ Donatello.PieChart = function(data,options) {
   if (this.piechart.colors)
   {
     this.piechart.colors = new Donatello.ColorRange(
-      Raphael.getRGB(this.piechart.colors[0]),
-      Raphael.getRGB(this.piechart.colors[1])
+      Donatello.Color.parse(this.piechart.colors[0]),
+      Donatello.Color.parse(this.piechart.colors[1])
     );
   }
   else
   {
     this.piechart.colors = new Donatello.ColorRange(
-      Raphael.getRGB('#f00000'),
-      Raphael.getRGB('#050000')
+      Donatello.Color.parse('#f00000'),
+      Donatello.Color.parse('#050000')
     );
   }
 
