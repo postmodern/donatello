@@ -1,3 +1,9 @@
+### 0.0.2 / 2010-08-12
+
+* Added `Donatello.Color.parse`.
+* Use `Donatello.Color.parse` to parse in colors, instead of
+  `Raphael.getRGB`.
+
 ### 0.0.1 / 2010-08-04
 
 * Initial Release:
